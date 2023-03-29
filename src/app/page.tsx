@@ -1,91 +1,55 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from './page.module.css'
+"use client"
+import useSWR from "swr"
+import { Inter } from "next/font/google";
+import styles from "./page.module.css";
+import { GetStaticProps } from "next";
+import { useEffect, useState } from "react";
 
-const inter = Inter({ subsets: ['latin'] })
+//const fetcher = () => fetch("").then(res => res.json)
+
+interface ProductState {
+  map(arg0: (item: any) => JSX.Element): import('react').ReactNode;
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
 
 export default function Home() {
+  const [product, setProduct] = useState<ProductState | undefined>();
+  //const carts = useSWR("", fetcher)
+  useEffect(()=>{
+    const headers = { 'X-Auth-Token': 'wo9e40w72wf7f21kpz3xfgfiwmeffz'}
+    fetch("https://api.bigcommerce.com/stores/s9ye4xe3x0/v3/catalog/products", {
+        "mode":"cors",
+        'headers': {
+            'Access-Control-Allow-Origin': '*',           //BIG-COMMERCE API, NO ACEPTA CORS, AL DEFINIR EL MODO NO-CORS DEVUELVE UN OBJETO OPAQUE
+            'X-Auth-Token': 'wo9e40w72wf7f21kpz3xfgfiwmeffz',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => setProduct(data));
+    console.log(product)
+  })
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main>
+      <p>HELLO</p>
+      {product?.map(prod => 
+          <p key={prod.id}>{prod.name}</p>
+        )}
     </main>
-  )
+  );
+}
+
+export const getStaticProps: GetStaticProps = async () =>{
+  const res = await fetch("")
+  const data = await res.json()
+  return {
+    props: {
+      data
+    }
+  }
 }

@@ -1,4 +1,5 @@
 export interface Welcome {
+    map(arg0: (item: any) => JSX.Element): import("react").ReactNode;
     data: Datum[];
     meta: Meta;
 }

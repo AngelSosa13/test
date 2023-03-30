@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import { GetStaticProps } from "next";
 import { useEffect, useState } from "react";
 import { bigApi } from "../../api";
+import { Welcome } from "../../interfaces";
 
 //const fetcher = () => fetch("").then(res => res.json)
 
@@ -16,9 +17,9 @@ interface ProductState {
   price: number;
 }
 
-export default function Home(props) {
+export default function Home(props : any) {
   const [product, setProduct] = useState<ProductState | undefined>();
-
+  console.log([props])
   /* useEffect(() => {
     const headers = { "X-Auth-Token": "wo9e40w72wf7f21kpz3xfgfiwmeffz" };
     fetch("https://api.bigcommerce.com/stores/s9ye4xe3x0/v3/catalog/products", {
@@ -38,11 +39,11 @@ export default function Home(props) {
   return (
     <main>
       <p>TEST</p>
-      {product?.map((prod) => (
+      {props?.data?.map((prod : any) => (
         <>
-          <h3>{prod.name}</h3>
-          <p>{product.description}</p>
-          <h4>{product.price}</h4>
+          <h3>{prod.data.name}</h3>
+          <p>{prod.data.description}</p>
+          <h4>{prod.data.price}</h4>
         </>
       ))}
     </main>
@@ -50,12 +51,12 @@ export default function Home(props) {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const { data}  = await bigApi.get("/catalog/products")
+  const { data }  = await bigApi.get<Welcome>("/catalog/products")
   console.log(data)
   //const data = await res.json();
   return {
     props: {
-      producto: data
+      producto: data.data
     },
   };
 };

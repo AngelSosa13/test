@@ -17,9 +17,9 @@ interface ProductState {
   price: number;
 }
 
-export default function Home(props : any) {
+export default function Home({producto}:any) {
   const [product, setProduct] = useState<ProductState | undefined>();
-  console.log([props])
+  console.log(producto)
   /* useEffect(() => {
     const headers = { "X-Auth-Token": "wo9e40w72wf7f21kpz3xfgfiwmeffz" };
     fetch("https://api.bigcommerce.com/stores/s9ye4xe3x0/v3/catalog/products", {
@@ -39,7 +39,7 @@ export default function Home(props : any) {
   return (
     <main>
       <p>TEST</p>
-      {props?.data?.map((prod : any) => (
+      {producto?.data?.map((prod : any) => (
         <>
           <h3>{prod.data.name}</h3>
           <p>{prod.data.description}</p>
@@ -51,8 +51,8 @@ export default function Home(props : any) {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const { data }  = await bigApi.get<Welcome>("/catalog/products")
-  console.log(data)
+  const data  = await bigApi.get<Welcome>("/catalog/products")
+  console.log(JSON.stringify(data))
   //const data = await res.json();
   return {
     props: {
